@@ -1,14 +1,18 @@
 import { GetStaticProps } from "next";
+import { useContext } from "react";
 import Img from "next/image";
 import Link from "next/link";
 import {format, parseISO} from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 
+import { PlayerContext } from "../contexts/PlayerContext";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
 
 import { api } from "../services/api";
 
 import styles from "./home.module.scss";
+
+
 
 interface IEpisode {
   id: string,
@@ -27,6 +31,8 @@ interface IHomeProps {
 }
 
 export default function Home({ latestEpisodes, allEpisodes }: IHomeProps ) {
+
+  const { play } = useContext(PlayerContext);
  
   return (
     <div className={styles.homePage}>
@@ -51,7 +57,7 @@ export default function Home({ latestEpisodes, allEpisodes }: IHomeProps ) {
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>
                 </div>
-                <button type="button">
+                <button type="button" onClick={ () => play(episode) }>
                   <img src="/play-green.svg" alt="Tocar Episódio"/>
                 </button>
               </li>
@@ -94,7 +100,7 @@ export default function Home({ latestEpisodes, allEpisodes }: IHomeProps ) {
                     <td style={{ width: 100 }}>{episode.publishedAt}</td>
                     <td>{episode.durationAsString}</td>
                     <td>
-                      <button type="button">
+                      <button type="button" onClick={ () => play(episode) }>
                         <img src="/play-green.svg" alt="Tocar episódio"/>
                       </button>
                     </td>
@@ -107,7 +113,6 @@ export default function Home({ latestEpisodes, allEpisodes }: IHomeProps ) {
     </div>
   )
 }
-
 
 export const getStaticProps: GetStaticProps = async () => {
   

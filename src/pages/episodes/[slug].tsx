@@ -75,9 +75,27 @@ function Episode({ episode }: IEpisodeProps) {
 export default Episode;
 
 //NECESSÁRIO QUANDO TRABALHANDO COM PÁGINAS STATIC QUE PODEM SER DINÂNIMAS QUE RECEBEM PARÂMETRO. exemplo: [slug].tsx
+//paths: PAGINAS QUE QUISER DEIXAR PRÉ-CARREGADAS; fallback: 'blocking': Next GERA AS PÁGINAS CONFORME FOREM ACESSADAS
 export const getStaticPaths: GetStaticPaths = async () => { 
+
+    const { data } = await api.get("/episodes", {
+        params: {
+          _limit: 2,
+          _sort: "published_at",
+          _order: "desc"
+        }
+      })
+
+    const paths = data.map( episode => {
+        return {
+            params: {
+                slug: episode.id,
+            }
+        }
+    })  
+
     return {                                        
-        paths: [],
+        paths,
         fallback: "blocking",
     }
 }
