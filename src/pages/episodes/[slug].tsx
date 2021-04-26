@@ -7,10 +7,12 @@ import parseISO from "date-fns/parseISO";
 import ptBR from "date-fns/locale/pt-BR";
 
 import {convertDurationToTimeString} from "../../utils/convertDurationToTimeString";
+import { usePlayerContext } from "../../contexts/PlayerContext";
 
 import styles from "./episode.module.scss";
 
 import { api } from "../../services/api";
+
 
 
 interface IEpisode {
@@ -31,12 +33,7 @@ interface IEpisodeProps {
 
 function Episode({ episode }: IEpisodeProps) {
 
-   /* const router = useRouter();
-
-    return(
-        <h1>{router.query.slug}</h1> //SLUG VEM DA URL, PARA QUE A URL TENHA O NOME DO EPISODIO
-    )
-   */
+    const { play } = usePlayerContext();
     
     return(
         <div className={styles.episodeContainer}>
@@ -53,7 +50,7 @@ function Episode({ episode }: IEpisodeProps) {
                     src={episode.thumbnail} 
                     objectFit="cover"
                 />
-                <button type="button">
+                <button type="button" onClick={ () => play(episode) }>
                     <img src="/play.svg" alt="Tocar episódio"/>
                 </button>
             </div>
